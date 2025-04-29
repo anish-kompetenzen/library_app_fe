@@ -1,12 +1,13 @@
 import React, { useState } from 'react'
 import { Button, Card, CardBody, CardFooter, CardHeader, Form, FormControl } from 'react-bootstrap';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import Service from '../service/Service';
 
 const Login = () => {
 
     const [user, setUser] = useState({
-        userEmail: "",
-        userPass: ""
+        email: "",
+        password: ""
     });
     const navigate = useNavigate();
     const location = useLocation();
@@ -15,10 +16,19 @@ const Login = () => {
         setUser({ ...user, [event.target.name]: event.target.value });
     }
 
-    function handleSubmit(event) {
+    async function handleSubmit(event) {
         event.preventDefault();
         // this line prevents the default behaviour -> form submission
-
+        const response = await Service.loginUser(user);
+        if (user.email === response.data.email) {
+            navigate("/h", {
+                state: {
+                    user: response.data
+                }
+            });
+        } else {
+            alert("Incorrect credentials");
+        }
     }
 
     return (
@@ -30,11 +40,11 @@ const Login = () => {
                 <Form onSubmit={handleSubmit}>
                     <CardBody>
                         <FormControl type='email' className='mb-1'
-                            onChange={handleChange} required
-                            placeholder='Enter your email' name='userEmail' />
+                            onChange={handleChange} required value={user.email}
+                            placeholder='Enter your email' name='email' />
                         <FormControl type='password'
-                            onChange={handleChange} required
-                            placeholder='Enter your password' name='userPass' />
+                            onChange={handleChange} required value={user.password}
+                            placeholder='Enter your password' name='password' />
                     </CardBody>
                     <CardFooter className='d-flex align-items-center justify-content-between'>
                         <Button type='submit' variant='success'>Login</Button>

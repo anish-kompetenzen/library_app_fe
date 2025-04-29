@@ -1,25 +1,29 @@
 import React, { useState } from 'react'
-import { Button, Card, CardBody, CardFooter, CardHeader, Form, FormControl } from 'react-bootstrap';
+import { Button, Card, CardBody, CardFooter, CardHeader, Form, FormControl, FormSelect } from 'react-bootstrap';
+import Service from '../service/Service';
 
 const AddBook = () => {
 
     const [book, setBook] = useState({
-        bookName: "",
-        bookImage: "",
-        authorName: "",
-        bookGenre: "",
-        quantityAvailable: "",
-        publicationYear: ""
+        name: "",
+        image: "",
+        author: "",
+        genre: "",
+        quantity: "",
+        year: ""
     });
 
     function handleChange(event) {
         setBook({ ...book, [event.target.name]: event.target.value });
     }
 
-    function handleSubmit(event) {
+    async function handleSubmit(event) {
         event.preventDefault();
         // this line prevents the default behaviour -> form submission
-        console.log(book);
+        const response = await Service.addBook(book);
+        if (response.status === 201) {
+            alert("Book added successfully!!");
+        }
     }
 
     return (
@@ -31,30 +35,43 @@ const AddBook = () => {
                 <Form onSubmit={handleSubmit}>
                     <CardBody>
                         <FormControl type='text' className='mb-1'
-                            onChange={handleChange} required
-                            placeholder='Enter book name' name='bookName' />
+                            onChange={handleChange} required value={book.name}
+                            placeholder='Enter book name' name='name' />
                         <FormControl type='url' className='mb-1'
-                            onChange={handleChange} required
-                            placeholder='Enter book image' name='bookImage' />
+                            onChange={handleChange} required value={book.image}
+                            placeholder='Enter book image' name='image' />
                         <FormControl type='text' className='mb-1'
-                            onChange={handleChange} required
-                            placeholder='Enter book author' name='authorName' />
-                        <FormControl type='text' className='mb-1'
-                            onChange={handleChange} required
-                            placeholder='Enter book genre' name='bookGenre' />
+                            onChange={handleChange} required value={book.author}
+                            placeholder='Enter book author' name='author' />
+                        <FormSelect type='text' className='mb-1'
+                            onChange={handleChange} required name='genre'>
+                            <option value={'Enter book genre'}>Enter book genre</option>
+                            <option value={"Autobiography"}>Autobiography</option>
+                            <option value={"Adventure"}>Adventure</option>
+                            <option value={"Biography"}>Biography</option>
+                            <option value={"Literary Fiction"}>Literary Fiction</option>
+                            <option value={"Dystopian"}>Dystopian</option>
+                            <option value={"Horror"}>Horror</option>
+                            <option value={"Romance"}>Romance</option>
+                            <option value={"Fantasy"}>Fantasy</option>
+                            <option value={"Mystery"}>Mystery</option>
+                            <option value={"Thriller"}>Thriller</option>
+                            <option value={"Science Fiction"}>Science Fiction</option>
+                            <option value={"Non-Fiction"}>Non-Fiction</option>
+                        </FormSelect>
                         <FormControl type='number' className='mb-1'
-                            onChange={handleChange} required
-                            placeholder='Enter book quantity' name='quantityAvailable' />
+                            onChange={handleChange} required value={book.quantity}
+                            placeholder='Enter book quantity' name='quantity' />
                         <FormControl type='number'
-                            onChange={handleChange} required
-                            placeholder='Enter book publication year' name='publicationYear' />
+                            onChange={handleChange} required value={book.year}
+                            placeholder='Enter book publication year' name='year' />
                     </CardBody>
                     <CardFooter>
                         <Button type='submit'>Add Book</Button>
                     </CardFooter>
                 </Form>
             </Card>
-        </div>
+        </div >
     )
 }
 

@@ -1,23 +1,32 @@
 import React, { useState } from 'react'
 import { Button, Card, CardBody, CardFooter, CardHeader, Form, FormControl } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import Service from '../service/Service';
 
 const Register = () => {
 
     const [user, setUser] = useState({
-        userName: "",
-        userEmail: "",
-        userPass: ""
+        name: "",
+        email: "",
+        password: ""
     });
 
     function handleChange(event) {
         setUser({ ...user, [event.target.name]: event.target.value });
     }
 
-    function handleSubmit(event) {
+    async function handleSubmit(event) {
         event.preventDefault();
         // this line prevents the default behaviour -> form submission
-        console.log(user);
+        const response = await Service.registerUser(user);
+        if (response.status === 201) {
+            alert("User added successfully!");
+        }
+        setUser({
+            name: "",
+            email: "",
+            password: ""
+        });
     }
 
     return (
@@ -29,14 +38,14 @@ const Register = () => {
                 <Form onSubmit={handleSubmit}>
                     <CardBody>
                         <FormControl type='text' className='mb-1'
-                            onChange={handleChange} required
-                            placeholder='Enter your name' name='userName' />
+                            onChange={handleChange} required value={user.name}
+                            placeholder='Enter your name' name='name' />
                         <FormControl type='email' className='mb-1'
-                            onChange={handleChange} required
-                            placeholder='Enter your email' name='userEmail' />
+                            onChange={handleChange} required value={user.email}
+                            placeholder='Enter your email' name='email' />
                         <FormControl type='password'
-                            onChange={handleChange} required
-                            placeholder='Enter your password' name='userPass' />
+                            onChange={handleChange} required value={user.password}
+                            placeholder='Enter your password' name='password' />
                     </CardBody>
                     <CardFooter className='d-flex align-items-center justify-content-between'>
                         <Button type='submit'>Register</Button>

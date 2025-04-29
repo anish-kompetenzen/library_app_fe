@@ -9,7 +9,7 @@ const HomePage = () => {
 
     return (
         <div className='container'>
-            <h1 className='mt-5'>Hi User, Welcome to the app</h1>
+            <h1 className='mt-5'>Hi {location?.state?.user?.name}, Welcome to the app</h1>
             <div className='d-flex align-items-center justify-content-between' style={{ marginTop: "30vh" }}>
                 <Button variant='info'>Edit User</Button>
                 <Button onClick={() => navigate("/a")}>Add Books</Button>
